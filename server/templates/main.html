@@ -1,8 +1,10 @@
-
+<!DOCTYPE html>
 <html>
-    <head>
-
-    </head>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
     <body>
         <h1> Enter trend you want to explore here</h1>
         <form action="/">
@@ -10,6 +12,11 @@
             <input type="text" id="trend" name="trend"><br><br>
             <input type="submit" value="Submit">
         </form>
-        {% include image %}
+
+        <div id="vis"></div>
+        <script type="text/javascript">
+            spec = JSON.parse('{{ user | safe}}');
+            vegaEmbed("#vis", spec);
+        </script>
     </body>
 </html>

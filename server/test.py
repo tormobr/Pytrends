@@ -42,7 +42,7 @@ def get_trend(country="", key_words=["apple"]):
     ).add_selection(nearest)
 
     print("saving file here")
-    fig.save("templates/world.html")
+    return fig.to_json(indent=None)
 
 """
 def us():
