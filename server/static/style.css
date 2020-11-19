@@ -1,0 +1,43 @@
+
+body{
+    text-align: center;
+    margin: 0;
+}
+
+#navbar {
+    background-color: #eb5600;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    margin: 0;
+}
+#navbar li {
+    flex-basis: 20%;
+    transition: background-color 1s;
+}
+#navbar li a{
+    color: white;
+    display: block;
+    font-size: 150%;
+    padding: 20px;
+    text-decoration: none;
+}
+#navbar li:hover{
+    background-color: #333;
+}
+
+#container{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20;
+}
+
+#chart{
+    flex:1
+}
+#options{
+    flex:1
+    align: center;
+}
+

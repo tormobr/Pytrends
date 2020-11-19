@@ -4,37 +4,56 @@ from vega_datasets import data
 import altair as alt
 import pandas as pd
 
-pytrend = TrendReq()
 world_url = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json"
 us_url = "https://raw.githubusercontent.com/deldersveld/topojson/master/countries/united-states/us-albers.json"
+nor_url = "https://raw.githubusercontent.com/deldersveld/topojson/master/countries/norway/norway-counties.json"
+
 world = alt.topo_feature(world_url, "countries1")
 us = alt.topo_feature(us_url, "us")
+norway = alt.topo_feature(nor_url, "NOR_adm1")
 
+properties = {
+    "norway": "properties.NAME_1",
+    "usa": "properties.name",
+    "world": "properties.name"
+}
 
-def get_trend(country="", key_words=["apple"]):
+topo = {
+    "norway": norway,
+    "usa": us,
+    "world": world,
+}
+projections = {
+    "norway": "naturalEarth1",
+    "usa": "albersUsa",
+    "world": "naturalEarth1"
+}
+
+def get_trend(country="norway", key_words=["apple"], geo="NO"):
+    pytrend = TrendReq()
     # Prepare the data
     trend = key_words[0]
-    geo = country[:2].upper()
-    pytrend.build_payload(key_words, cat=0, timeframe="today 5-y", geo=geo, gprop="")
+    pytrend.build_payload(key_words, cat=0, timeframe="now 1-H", geo=geo, gprop="")
     df = pytrend.interest_by_region()
     df.reset_index(inplace=True)
-    df["geoName"] = df["geoName"].str.replace("United States", "United States of America")
+    df = clean_df(df)
+    print(df)
 
     # Make the chart
-    nearest = alt.selection(type="single", on="mouseover", fields=["properties.name"], empty="none")
+    nearest = alt.selection(type="single", on="mouseover", fields=[properties[country]], empty="none")
 
-    fig = alt.Chart(world).mark_geoshape().encode(
+    fig = alt.Chart(topo[country]).mark_geoshape().encode(
         color=alt.Color(f"{trend}:Q", scale=alt.Scale(scheme="oranges")),
         tooltip=[
-            alt.Tooltip("properties.name:N", title="Country"),
+            alt.Tooltip(f"{properties[country]}:N", title="Country"),
             alt.Tooltip(f"{trend}:Q", title=f"{trend}"),
         ],
         stroke=alt.condition(nearest, alt.value("gray"), alt.value(None)),
     ).transform_lookup(
-        lookup="properties.name",
+        lookup=properties[country],
         from_=alt.LookupData(df, "geoName", [f"{trend}"])
     ).project(
-        type="naturalEarth1"
+        type=projections[country]
     ).properties(
         width=1400,
         height=500,
@@ -43,6 +62,14 @@ def get_trend(country="", key_words=["apple"]):
 
     print("saving file here")
     return fig.to_json(indent=None)
+
+def clean_df(df):
+    df["geoName"] = df["geoName"].str.replace("Nord-Trondelag", "Nord-Trøndelag")
+    df["geoName"] = df["geoName"].str.replace("Sor-Trondelag", "Sør-Trøndelag")
+    df["geoName"] = df["geoName"].str.replace("Ostfold", "Østfold")
+    df["geoName"] = df["geoName"].str.replace("More og Romsdal", "Møre og Romsda")
+    df["geoName"] = df["geoName"].str.replace("United States", "United States of America")
+    return df
 
 """
 def us():
