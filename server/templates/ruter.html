@@ -6,90 +6,116 @@
 </head>
     <body>
         {% include "navbar.html" %}
-        <h1>Ruter reise fra oslo s</h1>
-        <h1>Ruter reise fra oslo s</h1>
-        <h1 id=strudel></h1>
+        <h1>Forskningsparken Avganger</h1>
         <table id=times>
-            <tbody id="your-table-body-id">
+            <tbody id="metro">
                 <tr>
                     <th>Rute</th>
-                    <th colspan=4>Tid</th>
+                    <th colspan=4>Minutter til annkomst</th>
+                </tr>
+            </tbody>
+        </table>
+        <table id=times>
+            <tbody id="tram">
+                <tr>
+                    <th>Rute</th>
+                    <th colspan=4>Minutter til annkomst</th>
+                </tr>
+            </tbody>
+        </table>
+        <h1> Stllatorvet Avganger </h1>
+        <table id=times>
+            <tbody id="bus">
+                <tr>
+                    <th>Rute</th>
+                    <th colspan=4>Minutter til annkomst</th>
                 </tr>
             </tbody>
         </table>
 <script type="text/javascript">
-    console.log("this happens");
-    const query = `{
-      stopPlace(id: "NSR:StopPlace:59600") {
-        name
-        id
-        estimatedCalls(numberOfDepartures: 20, whiteListedModes: [metro, rail]) {
-          expectedDepartureTime
-          aimedDepartureTime
-          destinationDisplay {
-            frontText
-          }
-          serviceJourney {
-            line {
-              publicCode
-              transportMode
-            }
-          }
-        }
-      }
-    }`
-    var values = {}
-    fetch('https://api.entur.io/journey-planner/v2/graphql', {
-        method: 'POST',
-        headers: {
-            // Replace this with your own client name:
-            'ET-Client-Name': 'Brandyberry',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ query }),
-    })
-        .then(res => res.json())
-        .then(stopPlaceData => {
-        console.log(stopPlaceData);
-        const data = stopPlaceData.data.stopPlace.estimatedCalls;
-        var tableBody = document.getElementById("your-table-body-id"),
-        newRow, newCell;
-        data.forEach(item => {
-            const name = item.destinationDisplay.frontText;
-            if (values[name] === undefined){
-                values[name] = [item.expectedDepartureTime]
-            }
-            else{
-                values[name].push(item.expectedDepartureTime)
-            }
-            //if (values[name] == undefined){
-                //values.push({ key: name, value: item.aimedDepartureTime })
-            //}
+    window.onload = function() {
+        getTimes("NSR:StopPlace:59600", "Forskningsparken", ["metro", "tram"]);
+        getTimes("NSR:StopPlace:6146", "Stillatorvet", ["onstreetBus"]);
+    };
 
-            console.log(item);
+    function getTimes(stopID, stopName, methods) {
+
+            
+        const id = "NSR:StopPlace:59648"
+        const query = `{
+            stopPlace(id: "${stopID}") {
+            name, 
+            id
+                estimatedCalls(numberOfDepartures: 30) {
+              expectedDepartureTime
+              aimedDepartureTime
+              destinationDisplay {
+                frontText
+              }
+              serviceJourney {
+                line {
+                  publicCode
+                  transportMode
+                }
+              }
+            }
+          }
+        }`
+        console.log(query)
+        var values = {}
+        fetch('https://api.entur.io/journey-planner/v2/graphql', {
+            method: 'POST',
+            headers: {
+                // Replace this with your own client name:
+                'ET-Client-Name': 'Brandyberry',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ query }),
         })
-        for (var key in values){
-            const elem = document.createElement("tr");
-            const k = document.createElement("td");
-            k.innerHTML = key;
-            elem.appendChild(k);
-            for (var i = 0; i < 4; i++){
-                time = document.createElement("td");
-                const val = values[key][i]
-                if (val){
-                    const minutes = (new Date(values[key][i]).getTime() - Date.now()) / (1000 * 60)
-                    time.innerHTML = minutes.toFixed(1)
-                }
-                else {
-                    time.innerHTML = ""
-                }
-                elem.appendChild(time);
-                tableBody.appendChild(elem)
-            }
+            .then(res => res.json())
+            .then(stopPlaceData => {
+            console.log(stopPlaceData);
 
-        }
-    })
-    console.log(values)
+            const data = stopPlaceData.data.stopPlace.estimatedCalls;
+            data.forEach(item => {
+                const name = item.destinationDisplay.frontText;
+                if (values[name] === undefined){
+                    values[name] = [{"time": item.expectedDepartureTime, "method":item.serviceJourney.line.transportMode}]
+                }
+                else{
+                    values[name].push({"time": item.expectedDepartureTime, "method":item.serviceJourney.line.transportMode})
+                }
+                //if (values[name] == undefined){
+                    //values.push({ key: name, value: item.aimedDepartureTime })
+                //}
+
+            })
+
+            for (var key in values){
+                var tableBody = document.getElementById(values[key][0].method);
+                const elem = document.createElement("tr");
+                const k = document.createElement("td");
+                const method = values[key][0].method
+                k.innerHTML = key + "(" + method + ")";
+                elem.appendChild(k);
+                for (var i = 0; i < 4; i++){
+                    time = document.createElement("td");
+                    const val = values[key][i]
+                    console.log(key)
+                    if (val){
+                        const minutes = (new Date(val.time).getTime() - Date.now()) / (1000 * 60)
+                        time.innerHTML = minutes.toFixed(1)
+                    }
+                    else {
+                        time.innerHTML = ""
+                    }
+                    elem.appendChild(time);
+                    tableBody.appendChild(elem)
+                }
+
+            }
+        })
+    }
 
 </script>
     </body>
