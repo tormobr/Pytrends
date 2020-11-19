@@ -25,18 +25,22 @@ def display_chart():
     trend = request.args.get("trend")
     key_words = [trend]
     if not trend:
-        key_words = ["apple"]
+        trend="apple"
+    key_words = [trend]
 
     norway = get_trend(country="norway", geo="NO", key_words=key_words)
     murica = get_trend(country="usa", geo="US", key_words=key_words)
     world = get_trend(country="world", geo="", key_words=key_words)
-    return render_template("main.html", norway=norway, usa=murica, world=world)
+    return render_template("main.html", norway=norway, usa=murica, world=world, trend_name=trend)
 
 
 @app.route('/norway', methods=["GET"])
 def norway():
     return render_template("navbar.html")
 
+@app.route('/ruter')
+def ruter():
+    return render_template("ruter.html")
 
 
 

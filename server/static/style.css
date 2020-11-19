@@ -41,3 +41,27 @@ body{
     align: center;
 }
 
+
+#times {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#times td, #times th {
+  border: 1px solid #ddd;
+  padding: 15px;
+}
+
+#times tr:nth-child(even){background-color: #f2f2f2;}
+
+#times tr:hover {background-color: #ddd;}
+
+#times th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #eb5600;
+  color: white;
+}

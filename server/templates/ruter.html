@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+    <body>
+        {% include "navbar.html" %}
+        <h1>Ruter reise fra oslo s</h1>
+        <h1>Ruter reise fra oslo s</h1>
+        <h1 id=strudel></h1>
+        <table id=times>
+            <tbody id="your-table-body-id">
+                <tr>
+                    <th>Rute</th>
+                    <th colspan=4>Tid</th>
+                </tr>
+            </tbody>
+        </table>
+<script type="text/javascript">
+    console.log("this happens");
+    const query = `{
+      stopPlace(id: "NSR:StopPlace:59600") {
+        name
+        id
+        estimatedCalls(numberOfDepartures: 20, whiteListedModes: [metro, rail]) {
+          expectedDepartureTime
+          aimedDepartureTime
+          destinationDisplay {
+            frontText
+          }
+          serviceJourney {
+            line {
+              publicCode
+              transportMode
+            }
+          }
+        }
+      }
+    }`
+    var values = {}
+    fetch('https://api.entur.io/journey-planner/v2/graphql', {
+        method: 'POST',
+        headers: {
+            // Replace this with your own client name:
+            'ET-Client-Name': 'Brandyberry',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query }),
+    })
+        .then(res => res.json())
+        .then(stopPlaceData => {
+        console.log(stopPlaceData);
+        const data = stopPlaceData.data.stopPlace.estimatedCalls;
+        var tableBody = document.getElementById("your-table-body-id"),
+        newRow, newCell;
+        data.forEach(item => {
+            const name = item.destinationDisplay.frontText;
+            if (values[name] === undefined){
+                values[name] = [item.expectedDepartureTime]
+            }
+            else{
+                values[name].push(item.expectedDepartureTime)
+            }
+            //if (values[name] == undefined){
+                //values.push({ key: name, value: item.aimedDepartureTime })
+            //}
+
+            console.log(item);
+        })
+        for (var key in values){
+            const elem = document.createElement("tr");
+            const k = document.createElement("td");
+            k.innerHTML = key;
+            elem.appendChild(k);
+            for (var i = 0; i < 4; i++){
+                time = document.createElement("td");
+                const val = values[key][i]
+                if (val){
+                    const minutes = (new Date(values[key][i]).getTime() - Date.now()) / (1000 * 60)
+                    time.innerHTML = minutes.toFixed(1)
+                }
+                else {
+                    time.innerHTML = ""
+                }
+                elem.appendChild(time);
+                tableBody.appendChild(elem)
+            }
+
+        }
+    })
+    console.log(values)
+
+</script>
+    </body>
+</html>

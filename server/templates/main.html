@@ -15,9 +15,13 @@
             <input type="submit" value="Submit">
         </form>
 
-        <div id="vis3"></div>
+        <h1> Trend {{ trend_name }} in the World </h1>
         <div id="vis2"></div>
+        <h1> Trend {{ trend_name }} in the Norway </h1>
+        <div id="vis3"></div>
+        <h1> Trend {{ trend_name }} in the United States </h1>
         <div id="vis1"></div>
+
         <script type="text/javascript">
             norway = JSON.parse('{{ norway | safe}}');
             world = JSON.parse('{{ world | safe}}');

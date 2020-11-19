@@ -12,23 +12,28 @@ world = alt.topo_feature(world_url, "countries1")
 us = alt.topo_feature(us_url, "us")
 norway = alt.topo_feature(nor_url, "NOR_adm1")
 
+# The properties name in the topo json
 properties = {
     "norway": "properties.NAME_1",
     "usa": "properties.name",
     "world": "properties.name"
 }
 
+# Topo json for different countries
 topo = {
     "norway": norway,
     "usa": us,
     "world": world,
 }
+
+# How to project different countries
 projections = {
     "norway": "naturalEarth1",
     "usa": "albersUsa",
     "world": "naturalEarth1"
 }
 
+# Gets a trend and creates maps
 def get_trend(country="norway", key_words=["apple"], geo="NO"):
     pytrend = TrendReq()
     # Prepare the data
@@ -71,31 +76,3 @@ def clean_df(df):
     df["geoName"] = df["geoName"].str.replace("United States", "United States of America")
     return df
 
-"""
-def us():
-    kw_list = ["Biden", "Trump", "hurricane"]
-    pytrend.build_payload(kw_list, cat=0, timeframe="2019-10-01 2020-11-03", geo="US", gprop="")
-    df = pytrend.interest_by_region()
-
-    us = alt.topo_feature("https://raw.githubusercontent.com/deldersveld/topojson/master/countries/united-states/us-albers.json", "us")
-    nearest = alt.selection(type="single", on="mouseover", fields=["properties.name"], empty="none")
-
-    df.reset_index(inplace=True)
-    df["geoName"] = df["geoName"].str.replace("United States", "United States of America")
-
-    fig = alt.Chart(us).mark_geoshape().encode(
-        color=alt.Color("hurricane:Q", scale=alt.Scale(scheme="reds")),
-        tooltip=[
-            alt.Tooltip("properties.name:N", title="Country"),
-            alt.Tooltip("hurricane:Q", title="Trend"),
-        ],
-        stroke=alt.value("gray"),
-    ).transform_lookup(
-        lookup="properties.name",
-        from_=alt.LookupData(df, "geoName", ["hurricane"])
-    ).project(
-        type="albersUsa"
-    )
-
-    fig.save("fig.html")
-"""
