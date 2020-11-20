@@ -72,6 +72,9 @@ h1 {
 #bus tr:last-of-type{
     border-bottom: 2px red solid;
 }
+#longbus tr:last-of-type{
+    border-bottom: 2px green solid;
+}
 #rail tr:last-of-type{
     border-bottom: 2px gray solid;
 }
@@ -94,6 +97,9 @@ h1 {
 }
 #bus th{
     background-color: red;
+}
+#longbus th{
+    background-color: green;
 }
 #rail th{
     background-color: gray;

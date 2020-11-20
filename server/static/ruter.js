@@ -33,9 +33,9 @@ function getTimes(stopID, stopName, methods) {
     })
         .then(res => res.json())
         .then(stopPlaceData => {
-        console.log(stopPlaceData);
 
         const data = stopPlaceData.data.stopPlace.estimatedCalls;
+        console.log(data)
         data.forEach(item => {
             const name = item.destinationDisplay.frontText;
             if (values[name] === undefined){
@@ -58,10 +58,13 @@ function getTimes(stopID, stopName, methods) {
         div.appendChild(header)
 
         for (var key in values){
-            const method = values[key][0].method
+            var method = values[key][0].method
+            console.log(values[key][0].num)
+            if (values[key][0].num.toString().length > 2){
+                method = "longbus"
+            }
             var tableBody = null
             var children = div.getElementsByTagName("tbody")
-            console.log(children)
             for (var i = 0; i < children.length; i++){
                 if (children[i].getAttribute("id") == method){
                     tableBody = children[i]
@@ -70,7 +73,6 @@ function getTimes(stopID, stopName, methods) {
             if (tableBody === null){
                 tableBody = createTable(method, div)
             }
-            console.log("ETF")
             const elem = document.createElement("tr");
             const k = document.createElement("td");
             const number = values[key][0].num
@@ -97,23 +99,39 @@ function getTimes(stopID, stopName, methods) {
         }
     })
 
-    function createTable(id, div){
-        console.log("creating table hree")
-        var table = document.createElement("table")
-        div.appendChild(table)
-        table.setAttribute("id", "times")
-        var tableBody = document.createElement("tbody");
-        tableBody.setAttribute("id", id)
-        table.appendChild(tableBody)
-        const row = document.createElement("tr")
-        const rute = document.createElement("th")
-        rute.innerHTML = "Rute"
-        rute.setAttribute("colspan", 2)
-        const time = document.createElement("th")
-        time.setAttribute("colspan", 4)
-        time.innerHTML = "Minutter til Ankomst"
-        tableBody.appendChild(rute)
-        tableBody.appendChild(time)
-        return tableBody
-    }
+}
+function createTable(id, div){
+    var table = document.createElement("table")
+    div.appendChild(table)
+    table.setAttribute("id", "times")
+    var tableBody = document.createElement("tbody");
+    tableBody.setAttribute("id", id)
+    table.appendChild(tableBody)
+    const row = document.createElement("tr")
+    const rute = document.createElement("th")
+    rute.innerHTML = "Rute"
+    rute.setAttribute("colspan", 2)
+    const time = document.createElement("th")
+    time.setAttribute("colspan", 4)
+    time.innerHTML = "Minutter til Ankomst"
+    tableBody.appendChild(rute)
+    tableBody.appendChild(time)
+    return tableBody
+}
+
+function getStop(stopName){
+    const url = "https://api.entur.io/geocoder/v1/autocomplete?text="+stopName+"&lang=en"
+    var ret = null
+    fetch(url)
+    .then(res => res.json())
+    .then(data => data.features[0].properties)
+    .then(data => {
+        const headers = document.getElementsByTagName("h1")
+        for (var i = 0; i < headers.length; i++){
+            if (headers[i].innerText == data.name){
+                return
+            }
+        }
+        getTimes(data.id, data.name)
+    })
 }
