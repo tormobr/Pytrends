@@ -60,7 +60,7 @@ function getTimes(stopID, stopName, methods) {
         for (var key in values){
             var method = values[key][0].method
             console.log(values[key][0].num)
-            if (values[key][0].num.toString().length > 2){
+            if (values[key][0].num.toString().length > 2 && method == "bus"){
                 method = "longbus"
             }
             var tableBody = null
