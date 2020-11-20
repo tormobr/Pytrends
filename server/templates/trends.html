@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+    <body>
+        {% include "navbar.html" %}
+        <h1> Enter trend you want to explore here</h1>
+        <form action="/">
+            <label>Trend: </label>
+            <input type="text" id="trend" name="trend"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+
+        <h1> Trend {{ trend_name }} in the World </h1>
+        <div id="vis2"></div>
+        <h1> Trend {{ trend_name }} in the Norway </h1>
+        <div id="vis3"></div>
+        <h1> Trend {{ trend_name }} in the United States </h1>
+        <div id="vis1"></div>
+
+        <script type="text/javascript">
+            norway = JSON.parse('{{ norway | safe}}');
+            world = JSON.parse('{{ world | safe}}');
+            us = JSON.parse('{{ usa | safe}}');
+            vegaEmbed("#vis2", world);
+            vegaEmbed("#vis3", norway);
+            vegaEmbed("#vis1", us);
+        </script>
+    </body>
+</html>

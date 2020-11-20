@@ -17,6 +17,7 @@ def ret_chart():
     fig_json = get_trend(key_words=key_words)
     return fig_json
 
+@app.route('/')
 @app.route('/trends', methods=["GET"])
 def display_chart():
     print("this happens")
@@ -32,10 +33,6 @@ def display_chart():
     return render_template("trends.html", norway=norway, usa=murica, world=world, trend_name=trend)
 
 
-@app.route('/norway', methods=["GET"])
-def norway():
-    return render_template("navbar.html")
-
 @app.route('/ruter')
 def ruter():
     return render_template("ruter.html")
@@ -45,9 +42,5 @@ def yr():
     return render_template("weather.html")
 
 
-@app.route('/')
-@app.route('/home')
-def home():
-    return render_template("home.html")
 if __name__ == "__main__":
     app.run(host="localhost", port="5000", debug=True)
