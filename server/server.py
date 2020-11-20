@@ -42,6 +42,11 @@ def norway():
 def ruter():
     return render_template("ruter.html")
 
+@app.route('/weather')
+def yr():
+    return render_template("weather.html")
+
+
 
 
 if __name__ == "__main__":

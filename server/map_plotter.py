@@ -1,6 +1,4 @@
-from matplotlib import pyplot as plt
 from pytrends.request import TrendReq
-from vega_datasets import data
 import altair as alt
 import pandas as pd
 

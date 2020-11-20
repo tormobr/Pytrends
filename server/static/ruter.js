@@ -6,7 +6,7 @@ function getTimes(stopID, stopName, methods) {
         stopPlace(id: "${stopID}") {
         name, 
         id
-            estimatedCalls(numberOfDepartures: 30) {
+            estimatedCalls(numberOfDepartures: 200) {
           expectedDepartureTime
           aimedDepartureTime
           destinationDisplay {

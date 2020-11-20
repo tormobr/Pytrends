@@ -1,0 +1,47 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+    <body>
+        {% include "navbar.html" %}
+        <h1>Forskningsparken Avganger</h1>
+        <table id=times>
+            <tbody id="metro">
+                <tr>
+                    <th colspan=2>Rute</th>
+                    <th colspan=4>Minutter til annkomst</th>
+                </tr>
+            </tbody>
+        </table>
+        <table id=times>
+            <tbody id="tram">
+                <tr>
+                    <th colspan=2>Rute</th>
+                    <th colspan=4>Minutter til annkomst</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <h1> Stillatorvet Avganger </h1>
+        <table id=times>
+            <tbody id="bus">
+                <tr>
+                    <th colspan=2>Rute</th>
+                    <th colspan=4>Minutter til annkomst</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <script src="static/ruter.js"></script> 
+        <script type="text/javascript">
+            window.onload = function() {
+                getTimes("NSR:StopPlace:59600", "Forskningsparken", ["metro", "tram"]);
+                getTimes("NSR:StopPlace:6146", "Stillatorvet", ["onstreetBus"]);
+            };
+        </script>
+
+    </body>
+</html>
