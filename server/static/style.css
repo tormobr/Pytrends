@@ -50,9 +50,10 @@ h1 {
 #times {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
-  width: 40%;
+  width: 60%;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 10px;
 }
 
 #times td, #times th {
@@ -62,6 +63,19 @@ h1 {
 
 #times tr:nth-child(even){background-color: #f2f2f2;}
 
+#metro tr:last-of-type{
+    border-bottom: 2px orange solid;
+}
+#tram tr:last-of-type{
+    border-bottom: 2px teal solid;
+}
+#bus tr:last-of-type{
+    border-bottom: 2px red solid;
+}
+#rail tr:last-of-type{
+    border-bottom: 2px gray solid;
+}
+
 #times tr:hover {background-color: #ddd;}
 
 #times th {
@@ -70,4 +84,17 @@ h1 {
   text-align: center;
   background-color: #eb5600;
   color: white;
+}
+
+#metro th{
+    background-color: orange;
+}
+#tram th{
+    background-color: teal;
+}
+#bus th{
+    background-color: red;
+}
+#rail th{
+    background-color: gray;
 }
