@@ -36,23 +36,13 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     margin: 20;
+    justify-content: center;
 }
-
-#chart{
-    flex:1
-}
-#options{
-    flex:1
-    align: center;
-}
-
 
 #times {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
-  width: 60%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 20px;
   margin-bottom: 10px;
 }
 
@@ -84,7 +74,6 @@ h1 {
 #times th {
   padding-top: 12px;
   padding-bottom: 12px;
-  text-align: center;
   background-color: #eb5600;
   color: white;
 }
@@ -103,4 +92,24 @@ h1 {
 }
 #rail th{
     background-color: gray;
+}
+
+#times thead, #times tbody {
+  display: block;
+}
+
+#times tbody {
+  height: 300px;
+  overflow: auto;
+}
+
+
+#homeContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+#homeContainer > div {
+    flex-basis: 50%;
 }

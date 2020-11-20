@@ -6,8 +6,9 @@
     <script src="static/ruter.js"></script> 
     <script type="text/javascript">
         window.onload = function() {
-            getTimes("NSR:StopPlace:59600", "Forskningsparken");
-            getTimes("NSR:StopPlace:6146", "Stillatorvet");
+            const div = document.getElementById("container")
+            getTimes("NSR:StopPlace:59600", "Forskningsparken", div);
+            getTimes("NSR:StopPlace:6146", "Stillatorvet", div);
         };
     </script>
 </head>
@@ -15,7 +16,9 @@
         {% include "navbar.html" %}
         <h1 id=header>Enter Stop</h1>
         <input type="text" id="stop" name="stop"><br><br>
-        <button onclick="getStop(document.getElementById('stop').value)">Click me</button> 
+        <button onclick="getStop(document.getElementById('stop').value, document.getElementById('container'))">Click me</button> 
+        <div id=container>
+        </div>
 
     </body>
 </html>

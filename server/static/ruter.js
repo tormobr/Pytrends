@@ -1,6 +1,5 @@
-function getTimes(stopID, stopName, methods) {
-
-        
+function getTimes(stopID, stopName, parentdiv) {
+    console.log("gettim times for: ", stopName)
     const id = "NSR:StopPlace:59648"
     const query = `{
         stopPlace(id: "${stopID}") {
@@ -33,7 +32,7 @@ function getTimes(stopID, stopName, methods) {
     })
         .then(res => res.json())
         .then(stopPlaceData => {
-
+         
         const data = stopPlaceData.data.stopPlace.estimatedCalls;
         console.log(data)
         data.forEach(item => {
@@ -44,27 +43,37 @@ function getTimes(stopID, stopName, methods) {
             else{
                 values[name].push({"time": item.expectedDepartureTime, "method":item.serviceJourney.line.transportMode, "num":item.serviceJourney.line.publicCode})
             }
-            //if (values[name] == undefined){
-                //values.push({ key: name, value: item.aimedDepartureTime })
-            //}
 
         })
+        
 
-        const div = document.createElement("div")
-        div.setAttribute("id", stopName)
-        document.body.appendChild(div)
-        const header = document.createElement("h1")
-        header.innerHTML = stopName
-        div.appendChild(header)
 
         for (var key in values){
             var method = values[key][0].method
-            console.log(values[key][0].num)
             if (values[key][0].num.toString().length > 2 && method == "bus"){
                 method = "longbus"
             }
+
+            div = null
+            var children = parentdiv.getElementsByTagName("div")
+            for (var i = 0; i < children.length; i++){
+                if (children[i].getAttribute("id") == stopName + " " + method){
+                    div = children[i]
+                }
+            }
+            if (div == null){
+                console.log("creating div here")
+                div = document.createElement("div")
+                div.setAttribute("id", stopName + " " + method)
+                parentdiv.appendChild(div)
+                const header = document.createElement("h1")
+                header.innerHTML = stopName + " " + method
+                div.appendChild(header)
+            }
+
             var tableBody = null
-            var children = div.getElementsByTagName("tbody")
+
+            children = div.getElementsByTagName("tbody")
             for (var i = 0; i < children.length; i++){
                 if (children[i].getAttribute("id") == method){
                     tableBody = children[i]
@@ -119,19 +128,21 @@ function createTable(id, div){
     return tableBody
 }
 
-function getStop(stopName){
+function getStop(stopName, parentdiv){
     const url = "https://api.entur.io/geocoder/v1/autocomplete?text="+stopName+"&lang=en"
     var ret = null
     fetch(url)
     .then(res => res.json())
     .then(data => data.features[0].properties)
     .then(data => {
+        console.log(data)
         const headers = document.getElementsByTagName("h1")
         for (var i = 0; i < headers.length; i++){
             if (headers[i].innerText == data.name){
                 return
             }
         }
-        getTimes(data.id, data.name)
+        console.log(data.id, data.name, parentdiv)
+        getTimes(data.id, data.name, parentdiv)
     })
 }
