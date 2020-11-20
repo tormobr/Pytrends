@@ -50,15 +50,25 @@ function getTimes(stopID, stopName, methods) {
 
         })
 
+        const div = document.createElement("div")
+        div.setAttribute("id", stopName)
+        document.body.appendChild(div)
         const header = document.createElement("h1")
         header.innerHTML = stopName
-        document.body.appendChild(header)
+        div.appendChild(header)
 
         for (var key in values){
             const method = values[key][0].method
-            var tableBody = document.getElementById(method);
+            var tableBody = null
+            var children = div.getElementsByTagName("tbody")
+            console.log(children)
+            for (var i = 0; i < children.length; i++){
+                if (children[i].getAttribute("id") == method){
+                    tableBody = children[i]
+                }
+            }
             if (tableBody === null){
-                tableBody = createTable(method)
+                tableBody = createTable(method, div)
             }
             console.log("ETF")
             const elem = document.createElement("tr");
@@ -87,10 +97,10 @@ function getTimes(stopID, stopName, methods) {
         }
     })
 
-    function createTable(id){
+    function createTable(id, div){
         console.log("creating table hree")
         var table = document.createElement("table")
-        const body = document.body.appendChild(table)
+        div.appendChild(table)
         table.setAttribute("id", "times")
         var tableBody = document.createElement("tbody");
         tableBody.setAttribute("id", id)
