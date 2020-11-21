@@ -8,47 +8,28 @@ def get_names(names=["Robin", "Oliver"]):
 
     # Nerest selection
     nearest = alt.selection(type='single', nearest=True, on='mouseover', fields=['år'], empty='none')
+    highlight = alt.selection(type='single', on='mouseover', fields=['name'], nearest=True)
 
-    # The chart itself
-    fig = alt.Chart(df).mark_line().encode(
-        x = "år",
-        y = "Antall:Q",
-        color = "name:N"
+
+    base = alt.Chart(df).encode(
+        x='år:T',
+        y='Antall:Q',
+        color='name:N'
     )
 
-    # Invisible selectors
-    selectors = alt.Chart(df).mark_point().encode(
-        x='år',
-        opacity=alt.value(0),
+    points = base.mark_circle().encode(
+        opacity=alt.value(0)
     ).add_selection(
-        nearest
-    )
-
-
-    # Dots on each line
-    points = fig.mark_point().encode(
-        opacity=alt.condition(nearest, alt.value(1), alt.value(0))
-    )
-
-    # Text displaying number on dot
-    text = fig.mark_text(align='left', dx=5, dy=-5).encode(
-        text=alt.condition(nearest, 'Antall', alt.value(' '))
-    )
-
-    # Vertical lines at x loc
-    rules = alt.Chart(df).mark_rule(color='gray').encode(
-        x='år:Q',
-    ).transform_filter(
-        nearest
-    )
-
-
-    # Layer together
-    fig = alt.layer(
-        fig, selectors, points, rules, text
+        highlight
     ).properties(
-        width=1200, height=700
+        width=600
     )
+
+    lines = base.mark_line().encode(
+        size=alt.condition(~highlight, alt.value(1), alt.value(3))
+    )
+
+    fig = alt.layer(lines, points).properties(width=1200, height=700)
 
     return fig.to_json(indent=None)
 
@@ -56,8 +37,7 @@ def prepare_data(df, names):
     df = df.drop(["statistikkvariabel"], axis=1)
     df = df.replace('\.', 0, regex=True)
     df=df.astype(float)
-    print(df)
+    df["år"] = pd.to_datetime(df["år"], format="%Y")
     df = df.melt('år', var_name='name', value_name='Antall')
-    print(df)
     df = df[df["name"].isin(names)]
     return df

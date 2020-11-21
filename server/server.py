@@ -37,13 +37,11 @@ def display_chart():
 def display_names():
     print("this happens")
     arg = request.args.get("names")
-    print(arg)
-    arg = arg.replace(" ", "")
-    print(arg)
     if not arg:
-        names = ["Petter"]
+        names = ["Petter", "Hans", "Per", "William", "Håkon"]
     else:
         names = arg.split(",")
+    names = [s.strip() for s in names]
     names = [s[0].upper() + s[1:] for s in names]
     print(names)
     fig = get_names(names=names)
