@@ -1,8 +1,11 @@
 import altair as alt
 import pandas as pd
+import os
 
 def get_names(names=["Robin", "Oliver"]):
-    filename = "Personer.csv"
+    THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(THIS_FOLDER, "./static/Personer.csv")
+
     df = pd.read_csv(filename, sep=";", encoding="ISO-8859-1")
     df = prepare_data(df, names)
 

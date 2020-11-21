@@ -55,15 +55,15 @@ def get_trend(country="norway", key_words=["apple"], geo="NO"):
     ).transform_lookup(
         lookup=properties[country],
         from_=alt.LookupData(df, "geoName", [f"{trend}"])
-    ).project(
-        type=projections[country]
     ).properties(
-        width=1400,
+        width=1000,
         height=500,
         title=f"Seach trend for {trend}",
     ).add_selection(nearest)
 
-    print("saving file here")
+    if country in ["world", "usa"]:
+        fig = fig.project( type=projections[country])
+
     return fig.to_json(indent=None)
 
 def clean_df(df):
