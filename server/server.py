@@ -4,6 +4,7 @@ import time
 import flask
 from flask import Flask, render_template, jsonify
 from map_plotter import get_trend
+from names import get_names
 
 app = Flask(__name__)
 
@@ -32,6 +33,21 @@ def display_chart():
     world = get_trend(country="world", geo="", key_words=key_words)
     return render_template("trends.html", norway=norway, usa=murica, world=world, trend_name=trend)
 
+@app.route('/names', methods=["GET"])
+def display_names():
+    print("this happens")
+    arg = request.args.get("names")
+    print(arg)
+    arg = arg.replace(" ", "")
+    print(arg)
+    if not arg:
+        names = ["Petter"]
+    else:
+        names = arg.split(",")
+    names = [s[0].upper() + s[1:] for s in names]
+    print(names)
+    fig = get_names(names=names)
+    return render_template("names.html", fig=fig)
 
 @app.route('/ruter')
 def ruter():
