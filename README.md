@@ -1,4 +1,5 @@
 # Pytrends
+[See demo here!](https://brandyberry.pythonanywhere.com)
 Initally a repo for exploring google trends, however it evolved
 
 ## About
